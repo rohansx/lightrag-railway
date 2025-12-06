@@ -26,5 +26,5 @@ EXPOSE $PORT
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:$PORT/health || exit 1
 
-# Start command
-CMD ["sh", "-c", "lightrag-server --host 0.0.0.0 --port $PORT --working-dir $WORKING_DIR --input-dir $INPUT_DIR"]
+# Start command (shell form to expand environment variables)
+CMD sh -c "lightrag-server --host 0.0.0.0 --port ${PORT:-9621} --working-dir ${WORKING_DIR:-/app/data/rag_storage} --input-dir ${INPUT_DIR:-/app/data/inputs}"
