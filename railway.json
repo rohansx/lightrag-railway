@@ -5,7 +5,7 @@
     "dockerfilePath": "Dockerfile"
   },
   "deploy": {
-    "startCommand": "lightrag-server --host 0.0.0.0 --port $PORT --working-dir $WORKING_DIR --input-dir $INPUT_DIR",
+    "startCommand": "/app/start.sh",
     "healthcheckPath": "/health",
     "restartPolicyType": "ON_FAILURE"
   }
