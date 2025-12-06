@@ -14,17 +14,21 @@ RUN pip install --no-cache-dir "lightrag-hku[api]"
 # Create data directories
 RUN mkdir -p /app/data/rag_storage /app/data/inputs
 
+# Copy startup script
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+
 # Set environment defaults
 ENV PORT=9621
 ENV WORKING_DIR=/app/data/rag_storage
 ENV INPUT_DIR=/app/data/inputs
 
 # Expose port
-EXPOSE $PORT
+EXPOSE 9621
 
-# Health check
+# Health check (Railway will override PORT at runtime)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:$PORT/health || exit 1
+    CMD curl -f http://localhost:${PORT:-9621}/health || exit 1
 
-# Start command (shell form to expand environment variables)
-CMD sh -c "lightrag-server --host 0.0.0.0 --port ${PORT:-9621} --working-dir ${WORKING_DIR:-/app/data/rag_storage} --input-dir ${INPUT_DIR:-/app/data/inputs}"
+# Start command
+CMD ["/app/start.sh"]
